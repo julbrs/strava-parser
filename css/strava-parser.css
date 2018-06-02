@@ -1,0 +1,43 @@
+#map {
+  height: 500px;
+  width: 100%;
+}
+
+#strava-data {
+  width: 100%;
+}
+
+#strava-data td, #strava-data th {
+  padding: 5px;
+}
+
+#strava-image {
+  max-width: 200px;
+}
+
+.unit {
+  font-size: 0.65em;
+  line-height: 1em;
+  margin-left: 2px;
+}
+
+#strava-data strong {
+  font-weight: 300;
+  font-size: 2.4rem;
+  line-height: 1.2em;
+}
+
+#strava-data th {
+  font-size: 1.2rem;
+  color: #99999e;
+  font-weight: normal;
+}
+
+#strava-data {
+  margin-bottom: 0;
+}
+
+#stravabox {
+  border: 1px #99999e solid;
+  margin-bottom: 1.5rem;
+}
