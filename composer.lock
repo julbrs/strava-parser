@@ -4,8 +4,50 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d83626fcab98bdcb808f575181025ab9",
+    "content-hash": "cc944865bbf93df2d83642d5a579b300",
     "packages": [
+        {
+            "name": "sibyx/phpgpx",
+            "version": "1.0-RC5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sibyx/phpGPX.git",
+                "reference": "0bb616dda0b6ff3e78c72167087c8ffe8b1cbf2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sibyx/phpGPX/zipball/0bb616dda0b6ff3e78c72167087c8ffe8b1cbf2e",
+                "reference": "0bb616dda0b6ff3e78c72167087c8ffe8b1cbf2e",
+                "shasum": ""
+            },
+            "require": {
+                "lib-libxml": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "evert/phpdoc-md": "~0.2.0",
+                "phpunit/phpunit": "^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "phpGPX\\": "src/phpGPX/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Dubec",
+                    "email": "jakub.dubec@gmail.com",
+                    "homepage": "https://jakubdubec.me"
+                }
+            ],
+            "description": "A simple PHP library for GPX import/export",
+            "time": "2018-01-25T12:25:51+00:00"
+        },
         {
             "name": "sunra/php-simple-html-dom-parser",
             "version": "v1.5.2",
@@ -58,7 +100,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "sibyx/phpgpx": 5
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

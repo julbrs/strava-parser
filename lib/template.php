@@ -4,7 +4,7 @@ function register_plugin_styles() {
   // Register a personalized stylesheet.
   wp_register_style( 'strava_parser1', plugins_url('strava-parser/css/strava-parser.css') );
   wp_register_style( 'strava_parser2', 'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css' );
-  wp_register_style( 'strava_parser3', plugins_url('strava-parser/css/Leaflet.Elevation-0.0.2.css') );
+  wp_register_style( 'strava_parser3', plugins_url('strava-parser/css/leaflet.elevation-0.0.4.css') );
   wp_register_style( 'strava_parser4', 'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' );
   wp_enqueue_style( 'strava_parser1' );
   wp_enqueue_style( 'strava_parser2' );
@@ -12,8 +12,9 @@ function register_plugin_styles() {
   wp_enqueue_style( 'strava_parser4' );
   wp_enqueue_script( 'script1', 'http://d3js.org/d3.v3.min.js', array(), 1.0, false);
   wp_enqueue_script( 'script2', 'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js', array(), 1.0, false);
-  wp_enqueue_script( 'script3', plugins_url('strava-parser/js/Leaflet.Elevation-0.0.2.min.js'), array(), 1.0, false);
+  wp_enqueue_script( 'script3', plugins_url('strava-parser/js/leaflet.elevation-0.0.4.min.js'), array(), 1.0, false);
   wp_enqueue_script( 'script4', 'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js', array(), 1.0, false);
+  wp_enqueue_script( 'script5', 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.3.1/gpx.min.js', array(), 1.0, false);
 }
 
 if (!is_admin() ) {
@@ -21,56 +22,13 @@ if (!is_admin() ) {
   add_action( 'wp_enqueue_scripts', 'register_plugin_styles' );
 }
 
-function get_after_content($stream, $strava_url) {
+function get_after_content() {
   $mapbox = get_option('mapbox_api');
-  $url = plugins_url('strava-parser/');
-
-  $l = '';
-  $start = '';
-  $end = '';
-  $elevation = 0;
-  $resting = 0;
-  $currentstepid = 0;
-  $STEPSIZE = 69;
-  foreach ($stream->latlng as $id => $point) {
-    if($l!='') {
-      $l .= ',';
-      $end = '['.$point[0].','.$point[1].']';
-    }
-    else {
-      $start = '['.$point[0].','.$point[1].']';
-    }
-    $l .= '['.$point[1].','.$point[0].','.$stream->altitude[$id].']';
-    $delta = $stream->altitude[$id] - $stream->altitude[$id-1];
-    if($id != 0 && $delta > 0 ) {
-      //$elevation += $delta;
-    }
-    if($id != 0 && $id % 2 == 0) {
-
-      $delta = $stream->altitude[$id] - $stream->altitude[$currentstepid];
-      if($delta > 0) {
-        $elevation += $delta;
-      }
-      $currentstepid = $id;
-    }
-    if($id != 0 && $stream->resting[$id]) {
-      $resting += $stream->time[$id] - $stream->time[$id-1];
-    }
-  }
-  // compute distance with stream data ! take last element /1000 to have in km
-  $distance = round(end($stream->distance)/1000, 1);
-  $elevation = round($elevation);
-
-  // compute time with stream data ! take last element and parse it
-  $seconds = end($stream->time) - $resting;
-  // gmadate is messy when there is more than 24h. Yeah I know who is running more than 24h you ask ?
-  $time = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
+  $wp_upload_dir = wp_upload_dir();
+  $gpxurl = $wp_upload_dir['baseurl'].'/gpx/'.get_the_ID().'.gpx';
 
   return <<<HTML
 <div id="stravabox">
-  <!-- <a target="_blank" href="{$strava_url}">
-    <img id="strava-image" src="{$data[image]}" alt="">
-  </a>-->
 <div id="map"></div>
 
 <table id="strava-data" class="g1d-navbar">
@@ -83,9 +41,9 @@ function get_after_content($stream, $strava_url) {
   </thead>
   <tbody>
     <tr>
-      <td><strong>{$time}</strong></td>
-      <td><strong>{$distance} <span class="unit">km</span></strong></td>
-      <td><strong>{$elevation} <span class="unit">m</span></strong></td>
+      <td><strong><span id="time"></span></strong></td>
+      <td><strong ><span id="distance"></span> <span class="unit">km</span></strong></td>
+      <td><strong><span id="elevation"></span> <span class="unit">m</span></strong></td>
     </tr>
     <tr>
       <td colspan="3">
@@ -94,8 +52,6 @@ function get_after_content($stream, $strava_url) {
     </tr>
   </tbody>
 </table>
-
-
 
     <script type="text/javascript">
 
@@ -112,11 +68,6 @@ function get_after_content($stream, $strava_url) {
           id: 'mapbox.streets',
           accessToken: '{$mapbox}'
       }).addTo(map);
-
-      var geojson = {"name":"NewFeatureType","type":"FeatureCollection","features":[
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[{$l}]},"properties":null}
-        ]}
-        ;
 
       var el = L.control.elevation({
         position: "bottomright",
@@ -142,21 +93,31 @@ function get_after_content($stream, $strava_url) {
       	imperial: false    //display imperial units instead of metric
       });
       el.addTo(map);
-      var gjl = L.geoJson(geojson,{
-          onEachFeature: el.addData.bind(el)
-      }).addTo(map);
+      // var gjl = L.geoJson(geojson,{
+      //     onEachFeature: el.addData.bind(el)
+      // }).addTo(map);
 
-      var marker = L.marker({$start}, {
-          //icon: L.marker.icon({'marker-symbol': 'post', 'marker-color': '0044FF'}),
-          title: 'Début'
-      }).addTo(map);
+      // adding gpx map
+      var gpx = '{$gpxurl}'; // URL to your GPX file or the GPX itself
+      var g = new L.GPX(gpx, {
+        async: true,
+        marker_options: {
 
-      var marker2 = L.marker({$end}, {
-          //icon: L.marker.icon({'marker-symbol': 'post', 'marker-color': '0044FF'}),
-          title: 'Fin'
-      }).addTo(map);
+          endIconUrl: 'images/pin-icon-end.png',
+          shadowUrl: 'images/pin-shadow.png'
+        }
+      }).on('loaded', function(e) {
+        map.fitBounds(e.target.getBounds());
+        document.getElementById("time").innerHTML = e.target.get_duration_string(e.target.get_total_time(), true);
+        document.getElementById("distance").innerHTML = Math.round(e.target.get_distance()/1000);
+        document.getElementById("elevation").innerHTML = Math.round(e.target.get_elevation_gain());
 
-      map.fitBounds(gjl.getBounds());
+      }).on('addline',function(e){
+        el.addData(e.line);
+      });
+      g.addTo(map);
+
+
     </script>
 </div>
 HTML;
