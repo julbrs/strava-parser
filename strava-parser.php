@@ -35,6 +35,12 @@ function sparser_filter_content($content) {
     return $content;
   }
 
+  $strava_url = get_post_meta($GLOBALS['post']->ID, get_option('strava_cf'), true);
+  if($strava_url == null) {
+    // not strava url go out
+    return;
+  }
+
   $wp_upload_dir = wp_upload_dir();
   $file = $wp_upload_dir['basedir'].'/gpx/'.$GLOBALS['post']->ID.'.gpx';
   if (!file_exists($file)) {
@@ -42,7 +48,7 @@ function sparser_filter_content($content) {
     return $content;
   }
 
-  return $content.get_after_content();
+  return $content.get_after_content($strava_url);
 }
 
 function grab_strava_gpx($post_id) {

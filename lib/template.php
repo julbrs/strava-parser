@@ -22,7 +22,7 @@ if (!is_admin() ) {
   add_action( 'wp_enqueue_scripts', 'register_plugin_styles' );
 }
 
-function get_after_content() {
+function get_after_content($strava_url) {
   $mapbox = get_option('mapbox_api');
   $wp_upload_dir = wp_upload_dir();
   $gpxurl = $wp_upload_dir['baseurl'].'/gpx/'.get_the_ID().'.gpx';
