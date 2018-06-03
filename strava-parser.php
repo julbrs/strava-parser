@@ -88,13 +88,14 @@ function grab_strava_gpx($post_id) {
   $track->source 					= sprintf("Strava");
 
   $segment 						= new Segment();
+  $date = new DateTime();
   foreach ($stream->latlng as $id => $pt) {
   	// Creating trackpoint
   	$point 						 = new Point(Point::TRACKPOINT);
   	$point->latitude 	 = $pt[0];
   	$point->longitude  = $pt[1];
   	$point->elevation  = $stream->altitude[$id];
-  	$point->time 			 = $stream->time[$id-1];
+  	$point->time 			 = new \DateTime('+'.$stream->time[$id].' seconds');
   	$segment->points[] = $point;
   }
 
