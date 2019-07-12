@@ -38,7 +38,7 @@ function sparser_filter_content($content) {
   $strava_url = get_post_meta($GLOBALS['post']->ID, get_option('strava_cf'), true);
   if($strava_url == null) {
     // not strava url go out
-    return;
+    return $content;
   }
 
   $wp_upload_dir = wp_upload_dir();
