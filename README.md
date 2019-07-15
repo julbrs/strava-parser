@@ -30,3 +30,5 @@ The box will appears once you save an activity in an article.
 Using [Leaflet](https://leafletjs.com) !
 
 Thanks to [Mapbox](https://www.mapbox.com) for the tiles !
+
+Developed and first deployed on [ravito](http://ravito.distance.plus), a French blogging platform for trail-runners. Tke a look !
