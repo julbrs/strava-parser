@@ -1,5 +1,17 @@
 {
-  "require" : {
+  "name": "bobman38/strava-parser",
+  "description": "Show Strava activities in Wordpress post",
+  "keywords": ["wordpress", "plugin"],
+  "homepage": "https://github.com/bobman38/strava-parser",
+  "authors": [
+    {
+      "name": "Julien Bras",
+      "homepage": "https://github.com/bobman38"
+    }
+  ],
+  "type": "wordpress-plugin",
+  "require": {
+    "php": ">=5.6",
     "sunra/php-simple-html-dom-parser": "1.5.2",
     "sibyx/phpgpx": "@RC"
   }
