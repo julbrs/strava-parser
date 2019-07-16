@@ -9,7 +9,6 @@ Version: 0.2
 Author URI: http://julien.sidoine.org
 */
 
-require 'vendor/autoload.php';
 //require_once 'lib/StaticMap.class.php';
 //require_once 'lib/Polyline.php';
 use Sunra\PhpSimple\HtmlDomParser;
