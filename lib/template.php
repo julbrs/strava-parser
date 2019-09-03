@@ -10,7 +10,7 @@ function register_plugin_styles() {
   wp_enqueue_style( 'strava_parser2' );
   wp_enqueue_style( 'strava_parser3' );
   wp_enqueue_style( 'strava_parser4' );
-  wp_enqueue_script( 'script1', 'http://d3js.org/d3.v3.min.js', array(), 1.0, false);
+  wp_enqueue_script( 'script1', '//d3js.org/d3.v3.min.js', array(), 1.0, false);
   wp_enqueue_script( 'script2', 'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js', array(), 1.0, false);
   wp_enqueue_script( 'script3', plugins_url('strava-parser/js/leaflet.elevation-0.0.4.min.js'), array(), 1.0, false);
   wp_enqueue_script( 'script4', 'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js', array(), 1.0, false);
