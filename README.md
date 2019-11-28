@@ -31,4 +31,4 @@ Using [Leaflet](https://leafletjs.com) !
 
 Thanks to [Mapbox](https://www.mapbox.com) for the tiles !
 
-Developed and first deployed on [ravito](http://ravito.distances.plus), a French blogging platform for trail-runners. Take a look !
+Developed and first deployed on [ravito](https://ravito.distances.plus), a French blogging platform for trail-runners. Take a look !
