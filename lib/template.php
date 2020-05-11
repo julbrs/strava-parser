@@ -26,6 +26,7 @@ function get_after_content($strava_url) {
   $mapbox = get_option('mapbox_api');
   $wp_upload_dir = wp_upload_dir();
   $gpxurl = $wp_upload_dir['baseurl'].'/gpx/'.get_the_ID().'.gpx';
+  $plugin_url = plugin_dir_url( dirname(__FILE__) );
 
   return <<<HTML
 <div id="stravabox">
@@ -102,9 +103,9 @@ function get_after_content($strava_url) {
       var g = new L.GPX(gpx, {
         async: true,
         marker_options: {
-
-          endIconUrl: 'images/pin-icon-end.png',
-          shadowUrl: 'images/pin-shadow.png'
+          shadowUrl: '{$plugin_url}/images/pin-shadow.png',
+          endIconUrl: '{$plugin_url}/images/pin-icon-end.png',
+          startIconUrl: '{$plugin_url}/images/pin-icon-start.png',
         }
       }).on('loaded', function(e) {
         map.fitBounds(e.target.getBounds());
